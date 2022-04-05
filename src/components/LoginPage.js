@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { useRouter } from 'next/router';
 import { LockClosedIcon } from '@heroicons/react/solid';
 import { useAuth } from '@hooks/useAuth';
 
@@ -7,6 +8,8 @@ export default function LoginPage() {
     const passwordRef = useRef(null);
     const auth = useAuth();
     const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
+    const router = useRouter();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -16,6 +19,10 @@ export default function LoginPage() {
         auth.signin(email, password)
             .then(() => {
                 setError(null);
+                setSuccess('Inicio de sesión exitoso');
+                setTimeout(() => {
+                    router.push('/dashboard');
+                }, 1000);
             })
             .catch((error) => {
                 if (error.response?.status === 401) {
@@ -25,7 +32,7 @@ export default function LoginPage() {
                 } else if (error.response?.status === 403) {
                     setError('Usuario no activo');
                 } else {
-                    setError('Error desconocido');
+                    setError('Algo salió mal');
                 }
             });
     };
@@ -40,6 +47,7 @@ export default function LoginPage() {
                     </div>
                     <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                         {error && <p className="text-red-600 text-sm font-medium">Error! {error}</p>}
+                        {success && <p className="text-green-600 text-sm font-medium">{success}</p>}
                         <input type="hidden" name="remember" defaultValue="true" />
                         <div className="rounded-md shadow-sm -space-y-px">
                             <div>
