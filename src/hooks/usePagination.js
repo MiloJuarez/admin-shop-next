@@ -62,6 +62,7 @@ export const usePagination = (limit = 5, total = 0, pagesOnEachSide = 3) => {
             showPagesOnRightSide = false;
         }
 
+        // Validate if there are more than (onEachSide * 2) pages to show ellipsis
         if (totalPages > onEachSide * 2) {
             showEllipsis = true;
         }
@@ -86,6 +87,8 @@ export const usePagination = (limit = 5, total = 0, pagesOnEachSide = 3) => {
 
     function addPagesToLeftSide(showEllipsis, currentPage, onEachSide) {
         let leftPages = [];
+
+        // Must be onEachSide + 2 pages to show the first page and the ellipsis
         if (currentPage - onEachSide > 2 && showEllipsis) {
             leftPages.push({
                 page: 1,
@@ -106,6 +109,7 @@ export const usePagination = (limit = 5, total = 0, pagesOnEachSide = 3) => {
             count = currentPage - 1;
         }
 
+        // Added pages to left side
         let offset = 0;
         while (count > 0) {
             offset = perPage * start;
@@ -130,6 +134,7 @@ export const usePagination = (limit = 5, total = 0, pagesOnEachSide = 3) => {
             count = totalPages - currentPage;
         }
 
+        // Added the pages to the right side
         let offset = 0;
         while (count > 0) {
             offset = perPage * start;
@@ -142,6 +147,7 @@ export const usePagination = (limit = 5, total = 0, pagesOnEachSide = 3) => {
             count--;
         }
 
+        // Add the ellipsis if it's required
         if (totalPages - currentPage > onEachSide + 1 && showEllipsis) {
             rigthPages.push({
                 page: 'right-ellipsis',
@@ -150,6 +156,7 @@ export const usePagination = (limit = 5, total = 0, pagesOnEachSide = 3) => {
             });
         }
 
+        // Add last page at the end if the ellipsis was added
         const lastPage = rigthPages.find((page) => page.page === totalPages);
         if (!lastPage) {
             offset = perPage * totalPages;

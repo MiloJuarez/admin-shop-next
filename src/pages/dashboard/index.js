@@ -5,7 +5,7 @@ import { usePagination } from '@hooks/usePagination';
 
 import Paginator from '@components/Paginator';
 
-const PRODUCT_LIMIT = 10;
+const PRODUCT_LIMIT = 5;
 
 export default function Dashboard() {
     const [productOffset, setProductOffset] = useState(1);
