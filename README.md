@@ -11,14 +11,24 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 To clone and run this application, you'll need <a href="https://git-scm.com" target="_blank">Git</a> and <a href="https://nodejs.org/en/download/" target="_blank">Node.js</a> (which comes with <a href="http://npmjs.com" targe="_blank">npm</a>) installed on your computer. From your command line:
 
-First, run the development server:
+<b>NOTE:</b> Before you run the app, update the .env.local with the next values
+
+TAILWIND_MODE=watch
+NEXT_PUBLIC_API_URL=https://api.escuelajs.co/api
+NEXT_PUBLIC_API_VERSION=v1
 
 ```bash
 # Clone this repo
 $ git clone https://github.com/MiloJuarez/admin-shop-next.git
 
+# Move to clone repo
+$ cd admin-shop-next
+
 # Install dependencies
 $ npm install
+
+# Create env file
+$ cp .env.example .env.local
 
 # Run the app
 npm run dev
