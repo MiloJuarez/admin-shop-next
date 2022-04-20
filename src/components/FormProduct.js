@@ -1,28 +1,56 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import useFetch from '@hooks/useFetch';
 import endpoints from '@services/api';
+import ProductSchema from 'utils/validations/ProductSchema';
 
 export default function FormProduct() {
     const categories = useFetch(endpoints.categories.list);
     const formRef = useRef(null);
+    const [formErrors, setFormErrors] = useState([]);
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const formData = new FormData(formRef.current);
+
+        let price = formData.get('price') === '' ? 0 : formData.get('price');
+
+        let images = [];
+        if (formData.get('images').name !== '') {
+            images.push(formData.get('images').name);
+        }
         const data = {
             title: formData.get('title'),
-            price: parseInt(formData.get('price')),
+            price: parseInt(price),
             description: formData.get('description'),
             categoryId: parseInt(formData.get('category')),
-            images: [formData.get('images').name],
+            images: images,
         };
-        console.log(data);
+
+        ProductSchema.validate(data, { abortEarly: false })
+            .then((validationResult) => {
+                console.log(validationResult);
+                setFormErrors([]);
+            })
+            .catch((error) => {
+                setFormErrors(error.errors);
+            });
     };
 
     return (
         <form ref={formRef} onSubmit={handleSubmit}>
             <div className="overflow-hidden">
                 <div className="px-4 py-5 bg-white sm:p-6">
+                    <ul className="mb-8">
+                        {formErrors.length > 0 ? (
+                            <>
+                                {formErrors.map((error, idx) => (
+                                    <li key={idx} className="text-red-600 font-medium">
+                                        {'*'} {error}
+                                    </li>
+                                ))}
+                            </>
+                        ) : null}
+                    </ul>
                     <div className="grid grid-cols-6 gap-6">
                         <div className="col-span-6 sm:col-span-3">
                             <label htmlFor="title" className="block text-sm font-medium text-gray-700">
