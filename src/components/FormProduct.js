@@ -2,13 +2,14 @@ import { useRef, useState } from 'react';
 import useFetch from '@hooks/useFetch';
 import endpoints from '@services/api';
 import ProductSchema from 'utils/validations/ProductSchema';
+import { addProduct } from '@services/api/products';
 
 export default function FormProduct() {
     const categories = useFetch(endpoints.categories.list);
     const formRef = useRef(null);
     const [formErrors, setFormErrors] = useState([]);
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
         const formData = new FormData(formRef.current);
 
@@ -27,13 +28,11 @@ export default function FormProduct() {
         };
 
         ProductSchema.validate(data, { abortEarly: false })
-            .then((validationResult) => {
-                console.log(validationResult);
+            .then((validatedData) => {
                 setFormErrors([]);
+                addProduct(validatedData).then((response) => console.log(response));
             })
-            .catch((error) => {
-                setFormErrors(error.errors);
-            });
+            .catch((error) => setFormErrors(error.errors));
     };
 
     return (
@@ -41,7 +40,7 @@ export default function FormProduct() {
             <div className="overflow-hidden">
                 <div className="px-4 py-5 bg-white sm:p-6">
                     <ul className="mb-8">
-                        {formErrors.length > 0 ? (
+                        {formErrors?.length > 0 ? (
                             <>
                                 {formErrors.map((error, idx) => (
                                     <li key={idx} className="text-red-600 font-medium">
