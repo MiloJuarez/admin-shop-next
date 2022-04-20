@@ -5,6 +5,7 @@ import { usePagination } from '@hooks/usePagination';
 import { PlusIcon, ChevronDownIcon } from '@heroicons/react/solid';
 import { Menu, Transition } from '@headlessui/react';
 import Modal from '@common/Modal';
+import FormProduct from '@components/FormProduct';
 
 import Paginator from '@components/Paginator';
 
@@ -155,7 +156,7 @@ export default function Products() {
                 </div>
             </div>
             <Modal open={open} setOpen={setOpen}>
-                <h1>Hola mundo</h1>
+                <FormProduct />
             </Modal>
         </>
     );
