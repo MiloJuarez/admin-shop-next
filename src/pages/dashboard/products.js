@@ -1,11 +1,14 @@
 import { Fragment, useEffect, useState } from 'react';
-import { PlusIcon, ChevronDownIcon } from '@heroicons/react/solid';
-import { Menu, Transition } from '@headlessui/react';
-import Modal from '@common/Modal';
-import FormProduct from '@components/FormProduct';
+
 import axios from 'axios';
 import endpoints from '@services/api';
 import useAlert from '@hooks/useAlert';
+import { deleteProduct } from '@services/api/products';
+
+import { PlusIcon, ChevronDownIcon, XCircleIcon } from '@heroicons/react/solid';
+import { Menu, Transition } from '@headlessui/react';
+import Modal from '@common/Modal';
+import FormProduct from '@components/FormProduct';
 import Alert from '@common/Alert';
 
 function classNames(...classes) {
@@ -29,6 +32,26 @@ export default function Products() {
             console.log(error);
         }
     }, [alert]);
+
+    const handleDelete = (id) => {
+        deleteProduct(id)
+            .then(() => {
+                setAlert({
+                    active: true,
+                    message: 'Product deleted successfully',
+                    type: 'success',
+                    autoClose: true,
+                });
+            })
+            .catch((error) => {
+                setAlert({
+                    active: true,
+                    message: error.message,
+                    type: 'error',
+                    autoClose: false,
+                });
+            });
+    };
 
     return (
         <>
@@ -137,9 +160,7 @@ export default function Products() {
                                                 </a>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <a href="#edit" className="text-indigo-600 hover:text-indigo-900">
-                                                    Delete
-                                                </a>
+                                                <XCircleIcon className="flex-shrink-0 h-6 w-6 test-gray-400 cursor-pointer" aria-label="Delete product" onClick={() => handleDelete(product?.id)} />
                                             </td>
                                         </tr>
                                     ))}
