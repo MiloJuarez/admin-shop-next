@@ -1,42 +1,38 @@
-import { Fragment, useState } from 'react';
-import useFetch from '@hooks/useFetch';
-import endpoints from '@services/api';
-import { usePagination } from '@hooks/usePagination';
+import { Fragment, useEffect, useState } from 'react';
 import { PlusIcon, ChevronDownIcon } from '@heroicons/react/solid';
 import { Menu, Transition } from '@headlessui/react';
 import Modal from '@common/Modal';
 import FormProduct from '@components/FormProduct';
-
-import Paginator from '@components/Paginator';
+import axios from 'axios';
+import endpoints from '@services/api';
+import useAlert from '@hooks/useAlert';
+import Alert from '@common/Alert';
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
 }
 
-const PRODUCT_LIMIT = process.env.PER_PAGE;
-
 export default function Products() {
     const [open, setOpen] = useState(false);
-    const [productOffset, setProductOffset] = useState(1);
-    const totalItems = useFetch(endpoints.products.paginate(0, 0));
-    const pagination = usePagination(PRODUCT_LIMIT, totalItems.length, 3);
-    const products = useFetch(endpoints.products.paginate(PRODUCT_LIMIT, productOffset));
+    const [products, setProducts] = useState([]);
+    const { alert, setAlert, toggleAlert } = useAlert();
 
-    const handlePagination = (event) => {
-        event.preventDefault();
-        let current = event.target.getAttribute('data-page');
-        if (current == null) {
-            current = event.target.parentNode.getAttribute('data-page');
-            if (current == null) {
-                current = event.target.parentNode.parentNode.getAttribute('data-page');
-            }
+    useEffect(() => {
+        async function getProducts() {
+            const response = await axios.get(endpoints.products.list);
+            setProducts(response.data);
         }
-        pagination.setCurrentPage(Number(current));
-        setProductOffset((Number(current) - 1) * PRODUCT_LIMIT);
-    };
+
+        try {
+            getProducts();
+        } catch (error) {
+            console.log(error);
+        }
+    }, [alert]);
 
     return (
         <>
+            <Alert alert={alert} handleClose={toggleAlert} />
             <div className="lg:flex lg:items-center lg:justify-between">
                 <div className="flex-1 min-w-0">
                     <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">List of products</h2>
@@ -91,7 +87,6 @@ export default function Products() {
             <div className="flex flex-col">
                 <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                        {products.length > 0 ? <Paginator pagination={pagination} handleClick={handlePagination} /> : null}
                         <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
@@ -151,12 +146,11 @@ export default function Products() {
                                 </tbody>
                             </table>
                         </div>
-                        {products.length > 0 ? <Paginator pagination={pagination} handleClick={handlePagination} /> : null}
                     </div>
                 </div>
             </div>
             <Modal open={open} setOpen={setOpen}>
-                <FormProduct />
+                <FormProduct setOpen={setOpen} setAlert={setAlert} />
             </Modal>
         </>
     );
