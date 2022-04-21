@@ -4,7 +4,7 @@ import endpoints from '@services/api';
 import ProductSchema from 'utils/validations/ProductSchema';
 import { addProduct } from '@services/api/products';
 
-export default function FormProduct({ setOpen, setAlert }) {
+export default function FormProduct({ setOpen, setAlert, product }) {
     const categories = useFetch(endpoints.categories.list);
     const formRef = useRef(null);
     const [formErrors, setFormErrors] = useState([]);
@@ -73,19 +73,32 @@ export default function FormProduct({ setOpen, setAlert }) {
                             <label htmlFor="title" className="block text-sm font-medium text-gray-700">
                                 Title
                             </label>
-                            <input type="text" name="title" id="title" className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                            <input
+                                defaultValue={product?.title}
+                                type="text"
+                                name="title"
+                                id="title"
+                                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                            />
                         </div>
                         <div className="col-span-6 sm:col-span-3">
                             <label htmlFor="price" className="block text-sm font-medium text-gray-700">
                                 Price
                             </label>
-                            <input type="number" name="price" id="price" className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                            <input
+                                defaultValue={product?.price}
+                                type="number"
+                                name="price"
+                                id="price"
+                                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                            />
                         </div>
                         <div className="col-span-6">
                             <label htmlFor="category" className="block text-sm font-medium text-gray-700">
                                 Category
                             </label>
                             <select
+                                defaultValue={product?.category}
                                 id="category"
                                 name="category"
                                 autoComplete="category-name"
@@ -104,6 +117,7 @@ export default function FormProduct({ setOpen, setAlert }) {
                                 Description
                             </label>
                             <textarea
+                                defaultValue={product?.description}
                                 name="description"
                                 id="description"
                                 autoComplete="description"
