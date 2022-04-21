@@ -4,7 +4,7 @@ import endpoints from '@services/api';
 import ProductSchema from 'utils/validations/ProductSchema';
 import { addProduct } from '@services/api/products';
 
-export default function FormProduct() {
+export default function FormProduct({ setOpen, setAlert }) {
     const categories = useFetch(endpoints.categories.list);
     const formRef = useRef(null);
     const [formErrors, setFormErrors] = useState([]);
@@ -30,7 +30,25 @@ export default function FormProduct() {
         ProductSchema.validate(data, { abortEarly: false })
             .then((validatedData) => {
                 setFormErrors([]);
-                addProduct(validatedData).then((response) => console.log(response));
+                addProduct(validatedData)
+                    .then(() => {
+                        setAlert({
+                            active: true,
+                            message: 'Product added succsefully',
+                            type: 'success',
+                            autoClose: false,
+                        });
+                        setOpen(false);
+                    })
+                    .catch((error) => {
+                        setAlert({
+                            active: true,
+                            message: error.message,
+                            type: 'error',
+                            autoClose: false,
+                        });
+                        setOpen(false);
+                    });
             })
             .catch((error) => setFormErrors(error.errors));
     };
