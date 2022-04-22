@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import useFetch from '@hooks/useFetch';
 import endpoints from '@services/api';
 import ProductSchema from 'utils/validations/ProductSchema';
@@ -8,6 +8,13 @@ export default function FormProduct({ setOpen, setAlert, product }) {
     const categories = useFetch(endpoints.categories.list);
     const formRef = useRef(null);
     const [formErrors, setFormErrors] = useState([]);
+    const [categoryDefaultValue, setCategoryDefaultValue] = useState(1);
+
+    useEffect(() => {
+        if (product) {
+            setCategoryDefaultValue(product?.category?.id);
+        }
+    }, [product]);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -98,7 +105,8 @@ export default function FormProduct({ setOpen, setAlert, product }) {
                                 Category
                             </label>
                             <select
-                                defaultValue={product?.category}
+                                value={categoryDefaultValue}
+                                onChange={(e) => setCategoryDefaultValue(e.currentTarget.selectedIndex)}
                                 id="category"
                                 name="category"
                                 autoComplete="category-name"
