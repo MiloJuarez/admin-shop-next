@@ -7,6 +7,9 @@ const { parsed: myEnv } = require('dotenv').config({
 
 module.exports = {
     reactStrictMode: true,
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
     webpack(config) {
         config.plugins.push(new webpack.EnvironmentPlugin(myEnv));
         return config;
