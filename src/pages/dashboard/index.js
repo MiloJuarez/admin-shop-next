@@ -13,7 +13,14 @@ const Dashboard = () => {
     const [productOffset, setProductOffset] = useState(1);
     const totalItems = useFetch(endpoints.products.paginate(0, 0));
     const pagination = usePagination(PRODUCT_LIMIT, totalItems.length, 3);
-    const products = useFetch(endpoints.products.paginate(PRODUCT_LIMIT, productOffset));
+    const products = useFetch(endpoints.products.paginate(PRODUCT_LIMIT, productOffset)).map((product) => {
+        if (product.images.length > 0) {
+            if (product.images[0].includes('http') == false) {
+                product.images[0] = `http://custom.url/${product.images[0]}`;
+            }
+        }
+        return product;
+    });
 
     const handlePagination = (event) => {
         event.preventDefault();
@@ -80,7 +87,7 @@ const Dashboard = () => {
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center">
                                                     <div className="flex-shrink-0 h-10 w-10">
-                                                        <Image className="h-10 w-10 rounded-full" src={product?.images[0]} alt="" />
+                                                        <Image className="h-10 w-10 rounded-full" src={product?.images[0]} alt="" height={60} width={60} />
                                                     </div>
                                                     <div className="ml-4">
                                                         <div className="text-sm font-medium text-gray-900">{product.title}</div>

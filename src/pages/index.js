@@ -34,7 +34,7 @@ export default function Home() {
                                     <div className="flex items-center justify-between w-full md:w-auto">
                                         <a href="#workflow">
                                             <span className="sr-only">Workflow</span>
-                                            <Image className="h-8 w-auto sm:h-10" src="https://tailwindui.com/Image/logos/workflow-mark-indigo-600.svg" alt="" />
+                                            <Image className="h-8 w-auto sm:h-10" src="https://tailwindui.com/Image/logos/workflow-mark-indigo-600.svg" alt="" height={100} width={100} />
                                         </a>
                                         <div className="-mr-2 flex items-center md:hidden">
                                             <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
@@ -70,7 +70,7 @@ export default function Home() {
                                 <div className="rounded-lg shadow-md bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
                                     <div className="px-5 pt-4 flex items-center justify-between">
                                         <div>
-                                            <Image className="h-8 w-auto" src="https://tailwindui.com/Image/logos/workflow-mark-indigo-600.svg" alt="" />
+                                            <Image className="h-8 w-auto" src="https://tailwindui.com/Image/logos/workflow-mark-indigo-600.svg" alt="" height={100} width={100} />
                                         </div>
                                         <div className="-mr-2">
                                             <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
@@ -129,6 +129,8 @@ export default function Home() {
                     className="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
                     src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2850&q=80"
                     alt=""
+                    height={500}
+                    width={500}
                 />
             </div>
         </div>
