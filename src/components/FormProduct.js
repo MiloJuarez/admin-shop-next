@@ -1,14 +1,16 @@
 import { useRef, useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import useFetch from '@hooks/useFetch';
 import endpoints from '@services/api';
-import ProductSchema from 'utils/validations/ProductSchema';
-import { addProduct } from '@services/api/products';
+import { ProductRegisterSchema, ProductUpdateSchema } from 'utils/validations/ProductSchema';
+import { addProduct, updateProduct } from '@services/api/products';
 
 export default function FormProduct({ setOpen, setAlert, product }) {
     const categories = useFetch(endpoints.categories.list);
     const formRef = useRef(null);
     const [formErrors, setFormErrors] = useState([]);
-    const [categoryDefaultValue, setCategoryDefaultValue] = useState(1);
+    const [categoryDefaultValue, setCategoryDefaultValue] = useState(0);
+    const router = useRouter();
 
     useEffect(() => {
         if (product) {
@@ -34,30 +36,45 @@ export default function FormProduct({ setOpen, setAlert, product }) {
             images: images,
         };
 
-        ProductSchema.validate(data, { abortEarly: false })
-            .then((validatedData) => {
-                setFormErrors([]);
-                addProduct(validatedData)
-                    .then(() => {
-                        setAlert({
-                            active: true,
-                            message: 'Product added succsefully',
-                            type: 'success',
-                            autoClose: false,
+        if (product) {
+            ProductUpdateSchema.validate(data)
+                .then(() => {
+                    updateProduct(product.id, data)
+                        .then((response) => {
+                            console.log(response);
+                            router.push('/dashboard/products/');
+                        })
+                        .catch((error) => {
+                            console.log(error.message);
                         });
-                        setOpen(false);
-                    })
-                    .catch((error) => {
-                        setAlert({
-                            active: true,
-                            message: error.message,
-                            type: 'error',
-                            autoClose: false,
+                })
+                .catch((error) => setFormErrors(error.errors));
+        } else {
+            ProductRegisterSchema.validate(data, { abortEarly: false })
+                .then((validatedData) => {
+                    setFormErrors([]);
+                    addProduct(validatedData)
+                        .then(() => {
+                            setAlert({
+                                active: true,
+                                message: 'Product added succsefully',
+                                type: 'success',
+                                autoClose: false,
+                            });
+                            setOpen(false);
+                        })
+                        .catch((error) => {
+                            setAlert({
+                                active: true,
+                                message: error.message,
+                                type: 'error',
+                                autoClose: false,
+                            });
+                            setOpen(false);
                         });
-                        setOpen(false);
-                    });
-            })
-            .catch((error) => setFormErrors(error.errors));
+                })
+                .catch((error) => setFormErrors(error.errors));
+        }
     };
 
     return (
@@ -106,7 +123,7 @@ export default function FormProduct({ setOpen, setAlert, product }) {
                             </label>
                             <select
                                 value={categoryDefaultValue}
-                                onChange={(e) => setCategoryDefaultValue(e.currentTarget.selectedIndex)}
+                                onChange={(e) => setCategoryDefaultValue(parseInt(e.target.value))}
                                 id="category"
                                 name="category"
                                 autoComplete="category-name"
