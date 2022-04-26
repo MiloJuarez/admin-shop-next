@@ -11,6 +11,7 @@ import { Menu, Transition } from '@headlessui/react';
 import Modal from '@common/Modal';
 import FormProduct from '@components/FormProduct';
 import Alert from '@common/Alert';
+import Image from 'next/image';
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
@@ -91,16 +92,16 @@ export default function Products() {
                             <Menu.Items className="origin-top-right absolute right-0 mt-2 -mr-1 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                                 <Menu.Item>
                                     {({ active }) => (
-                                        <a href="#" className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
+                                        <Link href="#" className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
                                             Edit
-                                        </a>
+                                        </Link>
                                     )}
                                 </Menu.Item>
                                 <Menu.Item>
                                     {({ active }) => (
-                                        <a href="#" className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
+                                        <Link href="#" className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
                                             View
-                                        </a>
+                                        </Link>
                                     )}
                                 </Menu.Item>
                             </Menu.Items>
@@ -141,7 +142,7 @@ export default function Products() {
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center">
                                                     <div className="flex-shrink-0 h-10 w-10">
-                                                        <img className="h-10 w-10 rounded-full" src={product?.images[0]} alt="" />
+                                                        <Image className="h-10 w-10 rounded-full" src={product?.images[0]} alt="" />
                                                     </div>
                                                     <div className="ml-4">
                                                         <div className="text-sm font-medium text-gray-900">{product.title}</div>
